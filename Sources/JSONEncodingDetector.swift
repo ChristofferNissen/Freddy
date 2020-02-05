@@ -88,8 +88,11 @@ public struct JSONEncodingDetector {
     private typealias EncodingBytePrefix = (UInt8, UInt8, UInt8?, UInt8?)
 
     private static func prefixFromHeader(_ header: ByteStreamPrefix) -> EncodingBytePrefix? {
+        
         if header.count >= 4 {
+
             return(header[0], header[1], header[2], header[3])
+            
         } else if header.count >= 2 {
             return (header[0], header[1], nil, nil)
         }

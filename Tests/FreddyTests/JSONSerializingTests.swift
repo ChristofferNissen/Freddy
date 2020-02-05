@@ -125,7 +125,9 @@ func dataFromFixture(_ filename: String) -> Data {
 
 func JSONFromFixture(_ filename: String) -> JSON {
     let data = dataFromFixture(filename)
+    
     do {
+//        try JSON(data: data, usingParser: )
         let json = try JSON(data: data)
         return json
     } catch {

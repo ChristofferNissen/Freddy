@@ -818,19 +818,20 @@ public extension JSONParser {
         fatalError("unavailable code cannot be executed")
     }
 
-    /// Creates an instance of `JSON` from UTF-8 encoded `data`.
-    static func parse(utf8 data: Data) throws -> JSON {
-        return try data.withUnsafeBytes { ptr -> JSON in
-            let buffer = UnsafeBufferPointer(start: ptr.load(as: UnsafePointer<UInt8>.self), count: data.count)
-            var parser = JSONParser(input: buffer)
-            return try parser.parse()
-        }
-//        return try data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) -> JSON in
-//            let buffer = UnsafeBufferPointer(start: ptr, count: data.count)
+//    /// Creates an instance of `JSON` from UTF-8 encoded `data`.
+//    static func parse(utf8 data: Data) throws -> JSON {
+//        
+//        return try data.withUnsafeBytes { ptr -> JSON in
+//            let buffer = UnsafeBufferPointer(start: ptr.load(as: UnsafePointer<UInt8>.self), count: data.count)
 //            var parser = JSONParser(input: buffer)
 //            return try parser.parse()
 //        }
-    }
+////        return try data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) -> JSON in
+////            let buffer = UnsafeBufferPointer(start: ptr, count: data.count)
+////            var parser = JSONParser(input: buffer)
+////            return try parser.parse()
+////        }
+//    }
 
     /// Creates an instance of `JSON` from `string`.
     static func parse(_ string: String) throws -> JSON {
@@ -853,7 +854,8 @@ extension JSONParser: JSONParserType {
     /// - throws: Any `JSONParser.Error` that arises during decoding.
     /// - seealso: JSONParser.parse()
     public static func createJSON(from data: Data) throws -> JSON {
-        return try parse(utf8: data)
+        
+        return try parse(String(decoding: data, as: UTF8.self))
     }
 
 }

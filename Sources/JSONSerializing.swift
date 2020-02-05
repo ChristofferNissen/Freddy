@@ -38,7 +38,7 @@ extension JSON {
     /// - see: Foundation.JSONSerialization
     public func serializeString(options: SerializeOptions = []) throws -> String {
         let data = try self.serialize(options: options)
-        guard let json = String(data: data, encoding: String.Encoding.utf8) else {
+        guard let json = String(data: data, encoding: .utf8) else {
             throw Error.stringSerializationError
         }
         return json

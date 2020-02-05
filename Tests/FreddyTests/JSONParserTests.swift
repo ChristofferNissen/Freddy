@@ -37,7 +37,8 @@ private func ==(lhs: JSONParser.Error, rhs: JSONParser.Error) -> Bool {
         return lOffset == rOffset
     case let (.numberSymbolMissingDigits(lOffset), .numberSymbolMissingDigits(rOffset)):
         return lOffset == rOffset
-    case (_, _):
+    
+    default:
         return false
     }
 }
@@ -61,7 +62,7 @@ class JSONParserTests: XCTestCase {
         let data = Data(bytes: UnsafePointer<UInt8>(hex), count: hex.count)
 
         do {
-            _ = try JSONParser.parse(utf8: data)
+            _ = try JSONParser.parse(String(decoding: data, as: UTF8.self))
             XCTFail("Unexpectedly did not throw an error")
         } catch JSONParser.Error.endOfStreamUnexpected {
             return
@@ -75,9 +76,9 @@ class JSONParserTests: XCTestCase {
             XCTFail("Cannot create data from string")
             return
         }
-
+        
         do {
-            _ = try JSONParser.parse(utf8: data)
+            _ = try JSONParser.parse(String(decoding: data, as: UTF8.self))
         } catch {
             XCTFail("Unexpected error \(error)")
         }
@@ -88,7 +89,7 @@ class JSONParserTests: XCTestCase {
         let data = Data(bytes: UnsafePointer<UInt8>(hex), count: hex.count)
 
         do {
-            _ = try JSONParser.parse(utf8: data)
+            _ = try JSONParser.parse(String(decoding: data, as: UTF8.self))
         } catch {
             XCTFail("Unexpected error \(error)")
         }
@@ -299,7 +300,7 @@ class JSONParserTests: XCTestCase {
         let anyValueExceedingIntMax = UInt.max
         let jsonString = "{\"exceedsIntMax\": \(anyValueExceedingIntMax)}"
 
-        let data = jsonString.data(using: String.Encoding.utf8)!
+        let data = jsonString.data(using: .utf8)!
         guard let json = try? JSON(data: data) else {
             XCTFail("Failed to even parse JSON: \(jsonString)")
             return
@@ -317,6 +318,7 @@ class JSONParserTests: XCTestCase {
         let jsonString = "{\"exceedsInt32Max\": \(anyValueExceedingInt32Max)}"
 
         let data = jsonString.data(using: .utf8)!
+        
         guard let json = try? JSON(data: data) else {
             XCTFail("Failed to even parse JSON: \(jsonString)")
             return
@@ -444,8 +446,8 @@ class JSONParserTests: XCTestCase {
             let hexWithBOM = fixtures.hexArray(encoding, includeBOM: true)
             let dataWithBOM = Data(bytes: UnsafePointer<UInt8>(hexWithBOM), count: hexWithBOM.count)
             do {
-                _ = try JSONParser.parse(utf8: data)
-                _ = try JSONParser.parse(utf8: dataWithBOM)
+                _ = try JSONParser.parse(String(decoding: data, as: UTF8.self))
+                _ = try JSONParser.parse(String(decoding: dataWithBOM, as: UTF8.self))
                 XCTFail("Unexpectedly did not throw an error")
             } catch JSONParser.Error.invalidUnicodeStreamEncoding(_) {
                 break
